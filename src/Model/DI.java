@@ -1,4 +1,4 @@
-package Tetris;
+package Model;
 
 import java.awt.Color;
 
@@ -17,7 +17,7 @@ public class DI {
 		gridCellHeight = (int) (height * 0.05),
 		gridCellWidth = (int) (width * 0.1),
 	
-		thread_sleep =  500;//1000/60;
+		thread_sleep =  150;//1000/60;
 	
 	
 	public static final Color 

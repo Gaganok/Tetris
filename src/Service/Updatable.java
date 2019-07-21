@@ -1,4 +1,4 @@
-package Tetris;
+package Service;
 
 public interface Updatable {
 	

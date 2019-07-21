@@ -1,4 +1,4 @@
-package Tetris;
+package Model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,22 +18,17 @@ public class TetrisField {
 	private List<Shape> shapeList;
 
 	public TetrisField() {
-
-
 		shapeList = new ArrayList<Shape>(Arrays.asList(
 				new BigTShape(), new SquareShape(), new TShape(), new ZShape()));
 
 		newShape(new SquareShape());
 	}
 
-	@Deprecated
-	private void initField() {
-		for(int i = 0; i < field.length; i++) 
-			for(int j = 0; j < field[0].length; j++) 
-				field[i][j] = 5;
+	public void testBottomLine() {
+		shapeList.forEach(s -> System.out.println(Arrays.toString(s.bottomLane())));
 	}
 
-	public List<Point> getShapePoints() {
+	public List<Point> getTakenPoints() {
 		List<Point> shapeList = new ArrayList<Point>();
 
 		for(int i = 0; i < field.length; i++) 
@@ -45,10 +40,10 @@ public class TetrisField {
 	}
 
 	private void addShape(Shape shape) {
-		for (int i = 0; i < shape.height; i++) 
-			for (int j = 0; j < shape.width; j++) 
+		for (int i = 0; i < shape.width; i++) 
+			for (int j = 0; j < shape.height; j++) 
 				if(shape.shape[i][j] == 1)
-					field[j + shape.position.x][i + shape.position.y] = shape.shape[i][j];
+					field[i + shape.position.x][j + shape.position.y] = shape.shape[i][j];
 		activeShape = shape;
 	}
 
@@ -58,13 +53,14 @@ public class TetrisField {
 	}
 
 	private void removeShape(Shape shape) {
-		for (int i = 0; i < shape.shape.length; i++) 
-			for (int j = 0; j < shape.shape[0].length; j++) 
-				field[j + shape.position.x][i + shape.position.y] = 0;
+		for (int i = 0; i < shape.width; i++) 
+			for (int j = 0; j < shape.height; j++) 
+				field[i + shape.position.x][j + shape.position.y] = 0;
 	}
 
 	private void moveDown(){
-		if(((activeShape.position.y + activeShape.height) == field[0].length) || isCollision()) {
+		System.out.println("Moved Down: x = " + activeShape.position.x + " y = " + activeShape.position.y);
+		if(((activeShape.position.y + activeShape.height) == field[0].length) || isCollisionDown()) {
 			for (int i = 0; i < activeShape.height; i++) 
 				if(isLine(i + activeShape.position.y)) 
 					removeLine(i + activeShape.position.y);
@@ -74,14 +70,16 @@ public class TetrisField {
 			activeShape.position.y += 1;
 			addShape(activeShape);
 
-			System.out.println("Moved Down");
+			System.out.println("Moved Down: x = " + activeShape.position.x + " y = " + activeShape.position.y);
 		}
 	}
 
 	private void removeLine(int line) {
+		//Remove Line
 		for (int i = 0; i < field.length; i++) 
 			field[i][line] = 0;
 
+		//Move everything above one line down
 		for(int i = line; i >= 0; i--) {
 			for (int j = 0; j < field.length; j++) {
 				if(field[j][i] == 1) {
@@ -99,15 +97,13 @@ public class TetrisField {
 		return true;
 	}
 
-	private boolean isCollision() {
-
+	private boolean isCollisionDown() {
 		int[] bottom = activeShape.bottomLane();
 
 		for(int i = 0; i < activeShape.width; i++) {
 			if(field[activeShape.position.x + i][activeShape.position.y + bottom[i]] == 1) {
 				System.out.println("Collision");
 				return true;
-
 			}
 		}
 
@@ -115,14 +111,15 @@ public class TetrisField {
 	}
 
 	private void moveSide(int offset) {
+		System.out.println("Moved Side: x = " + activeShape.position.x + " y = " + activeShape.position.y);
 		if(activeShape.position.x + offset >= 0 && 
 				(activeShape.position.x + offset + activeShape.width) <= field.length &&
-				isMoveSideValid(offset)) {
+				!isCollisionSide(offset)) {
 			removeShape(activeShape);
 			activeShape.position.x += offset;
 			addShape(activeShape);
 
-			System.out.println("Moved Side");
+			System.out.println("Moved Side: x = " + activeShape.position.x + " y = " + activeShape.position.y);
 		}
 	}
 
@@ -136,14 +133,30 @@ public class TetrisField {
 		}
 	}
 
-	public boolean isMoveSideValid(int offset) {
+/*	public boolean isMoveSideValid(int offset) {
 		int x = offset == 1 ? activeShape.width - 1 : 0; 
 
-		for (int i = 0; i < activeShape.height; i++) 
-			if(activeShape.shape[i][x] == 1 && field[activeShape.position.x + offset + x][activeShape.position.y + i] == 1)
-				return false;
+		for (int y = 0; y < activeShape.height; y++)
+			if(activeShape.shape[x][y] == 1) {
+				if(field[activeShape.position.x + offset + x][activeShape.position.y + y] == 1) {
+					return false;
+				}
+			} else 
+				if(activeShape.shape[x][y] == 1 && field[activeShape.position.x + offset + x][activeShape.position.y + y] == 1)
 
-		return true;
+
+					return true;
+		return false;
+	}*/
+
+	public boolean isCollisionSide(int offset) {
+		int[] side = offset == 1 ? activeShape.rightLine() : activeShape.rightLine();
+
+		for(int i = 0; i < activeShape.height; i++)
+			if(field[activeShape.position.x + (side[i] * offset)][activeShape.position.y + i] == 1) 
+				return true;
+
+		return false;
 	}
 
 }

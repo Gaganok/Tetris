@@ -1,4 +1,4 @@
-package Tetris;
+package View;
 
 import java.awt.Canvas;
 import java.awt.Dimension;
@@ -6,6 +6,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
+import Model.DI;
 
 public class TetrisCanvas extends Canvas{
 
@@ -73,7 +75,7 @@ public class TetrisCanvas extends Canvas{
 			            break;
 			        case KeyEvent.VK_RIGHT :
 			        	//DI.field.moveSide(1);
-			        	DI.field.move(1, -1);
+			        	DI.field.move(1, 1);
 			            break;
 			     }
 			}

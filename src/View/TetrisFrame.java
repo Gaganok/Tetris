@@ -1,4 +1,4 @@
-package Tetris;
+package View;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -7,6 +7,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JFrame;
+
+import Service.TetrisLooper;
+import Service.TetrisUpdater;
+import Service.Updatable;
 
 public class TetrisFrame extends JFrame{
 

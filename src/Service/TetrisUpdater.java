@@ -1,4 +1,7 @@
-package Tetris;
+package Service;
+
+import Model.DI;
+import Model.TetrisField;
 
 public class TetrisUpdater implements Updatable{
 	

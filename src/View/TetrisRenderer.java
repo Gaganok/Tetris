@@ -1,9 +1,11 @@
-package Tetris;
+package View;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-import java.util.List;
+
+import Model.DI;
+import Model.TetrisField;
+import Service.Updatable;
 
 public class TetrisRenderer implements Updatable {
 	
@@ -26,7 +28,6 @@ public class TetrisRenderer implements Updatable {
 		drawField(g);
 		drawGrid(g);
 		
-		
 		g.dispose();
 		bs.show();
 	}
@@ -34,10 +35,6 @@ public class TetrisRenderer implements Updatable {
 	private void fillBackground(Graphics g) {
 		g.setColor(DI.background);
 		g.fillRect(0, 0, width, height);
-	}
-	
-	public void refresh() {
-		
 	}
 	
 	private void drawGrid(Graphics g) {
@@ -52,7 +49,7 @@ public class TetrisRenderer implements Updatable {
 	
 	private void drawField(Graphics g) {
 		g.setColor(DI.shape);
-		field.getShapePoints().forEach(p -> 
+		field.getTakenPoints().forEach(p -> 
 			g.fillRect(p.x * DI.gridCellWidth, p.y * DI.gridCellHeight, DI.gridCellWidth, DI.gridCellHeight)
 		);
 	}

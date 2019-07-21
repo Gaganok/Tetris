@@ -1,6 +1,8 @@
-package Tetris;
+package Service;
 
 import java.util.List;
+
+import Model.DI;
 
 public class TetrisLooper implements Runnable{
 	

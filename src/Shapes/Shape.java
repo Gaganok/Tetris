@@ -1,20 +1,20 @@
 package Shapes;
 
-import Tetris.DI;
-import Tetris.Point;
+import Model.DI;
+import Model.Point;
 
 public abstract class Shape {
-	
+
 	public int width, height;
 	public int[][] shape;
 	public Point position;
-	
-	
+
+
 	public Shape(int width, int height, Point position) {
 		this(width, height);
 		this.position = new Point(position);
 	}
-	
+
 	public Shape(int width, int height) {
 		this.position = new Point(DI.shapeStartPoint);
 		this.width = width;
@@ -24,7 +24,7 @@ public abstract class Shape {
 	}
 
 	protected abstract void initShape();
-	
+
 	private void print() {
 		for (int i = 0; i < shape.length; i++) {
 			for (int j = 0; j < shape[0].length; j++) {
@@ -33,25 +33,44 @@ public abstract class Shape {
 			System.out.println();
 		}
 	}
-	
+
 	public int[] bottomLane() {
 		int[] bottom = new int[width]; 
-		
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				if(shape[y][x] == 1) {
-					if((y + 1) == height)
-						bottom[x] = height;
-					for(int k = y + 1; k < height; k++) {
-						if(shape[k][x] == 0) {
-							bottom[x] = k;
-							break;
-						} 
-					}
+
+		for (int x = 0; x < width; x++)
+			for (int y = height - 1; y >= 0; y--) 
+				if(shape[x][y] == 1) {
+					bottom[x] = y + 1;
+					break;
 				}
-			}
-		}
-		
+
 		return bottom;
 	}
+
+	public int[] leftLine() {
+		int[] left = new int[height]; 
+
+		for (int y = 0; y < height; y++) 
+			for (int x = 0; x < width; x++)
+				if(shape[x][y] == 1) {
+					left[y] = x - 1;
+					break;
+				}
+
+		return left;
+	}
+	
+	public int[] rightLine() {
+		int[] right = new int[height]; 
+
+		for (int y = 0; y < height; y++) 
+			for (int x = width - 1; x >= 0; x--)
+				if(shape[x][y] == 1) {
+					right[y] = x + 1;
+					break;
+				}
+
+		return right;
+	}
+	
 }
