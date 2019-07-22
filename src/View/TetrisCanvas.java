@@ -66,6 +66,7 @@ public class TetrisCanvas extends Canvas{
 			    switch( keyCode ) { 
 			        case KeyEvent.VK_UP:
 			            // handle up 
+			        	DI.field.rotate();
 			            break;
 			        case KeyEvent.VK_DOWN:
 			            // handle down 

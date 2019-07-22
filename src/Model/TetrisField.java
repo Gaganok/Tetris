@@ -22,6 +22,7 @@ public class TetrisField {
 				//new BigTShape(), new SquareShape(), new TShape(), new ZShape()));
 				BigTShape.class, SquareShape.class, ZShape.class, TShape.class));
 				//new BigTShape(), new ZShape()));
+				//TShape.class));
 		newShape(new SquareShape());
 	}
 
@@ -142,6 +143,12 @@ public class TetrisField {
 			if(field[i][y] == 0)
 				return false;
 		return true;
+	}
+
+	public void rotate() {
+		removeShape(activeShape);
+		activeShape.rotate();
+		addShape(activeShape);
 	}
 
 }

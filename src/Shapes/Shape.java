@@ -1,5 +1,7 @@
 package Shapes;
 
+import java.util.Arrays;
+
 import Model.DI;
 import Model.Point;
 
@@ -71,6 +73,25 @@ public abstract class Shape {
 				}
 
 		return right;
+	}
+
+	public void rotate() {
+		int[][] rotatedShape = new int[height][width];
+		
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				rotatedShape[y][x] = shape[x][y]; 
+			}
+		}
+		
+		int temp = height;
+		height = width;
+		width = temp;
+		
+		print();
+		shape = rotatedShape;
+		System.out.println();
+		
 	}
 	
 }
