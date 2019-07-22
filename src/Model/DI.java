@@ -5,8 +5,8 @@ import java.awt.Color;
 public class DI {
 	
 	public static final int 
-		width = 800, 
-		height = 1000,
+		width = 400, 
+		height = 500,
 		
 		frameLocationX = 500,
 		frameLocationY = 25,

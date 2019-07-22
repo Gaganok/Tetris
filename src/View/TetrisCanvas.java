@@ -71,11 +71,11 @@ public class TetrisCanvas extends Canvas{
 			            // handle down 
 			            break;
 			        case KeyEvent.VK_LEFT:
-			            DI.field.move(1, -1);
+			            DI.field.moveSide(-1);
 			            break;
 			        case KeyEvent.VK_RIGHT :
 			        	//DI.field.moveSide(1);
-			        	DI.field.move(1, 1);
+			        	DI.field.moveSide(1);
 			            break;
 			     }
 			}

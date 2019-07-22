@@ -12,6 +12,7 @@ public class Tetris {
 	}
 	
 	private static void test() {
-		DI.field.testBottomLine();
+		//DI.field.testBottomLine();
+		//DI.field.testSideLine();
 	}
 }

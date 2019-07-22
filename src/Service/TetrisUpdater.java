@@ -13,7 +13,7 @@ public class TetrisUpdater implements Updatable{
 
 	private void updateData() {
 		//field.moveDown();
-		DI.field.move(0, -1);
+		DI.field.moveDown();
 	}
 	
 	@Override
