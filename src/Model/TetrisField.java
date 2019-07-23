@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import Shapes.BigTShape;
+import Shapes.LShape;
 import Shapes.Shape;
 import Shapes.SquareShape;
 import Shapes.TShape;
@@ -20,19 +21,12 @@ public class TetrisField {
 	public TetrisField() {
 		shapeList = new ArrayList<Class<? extends Shape>>(Arrays.asList(
 				//new BigTShape(), new SquareShape(), new TShape(), new ZShape()));
-				BigTShape.class, SquareShape.class, ZShape.class, TShape.class));
+				//BigTShape.class, SquareShape.class, ZShape.class, TShape.class));
+				LShape.class));
 				//new BigTShape(), new ZShape()));
 				//TShape.class));
 		newShape(new SquareShape());
 	}
-
-	/*public void testBottomLine() {
-		shapeList.forEach(s -> System.out.println(Arrays.toString(s.bottomLane())));
-	}
-
-	public void testSideLine() {
-		shapeList.forEach(s -> System.out.println(Arrays.toString(s.leftLine())));
-	}*/
 
 	public List<Point> getTakenPoints() {
 		List<Point> shapeList = new ArrayList<Point>();

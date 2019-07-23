@@ -11,7 +11,16 @@ public abstract class Shape {
 	public int[][] shape;
 	public Point position;
 
-
+	
+	
+	public Shape(int width, int height, String shapeString) {
+		this.position = new Point(DI.shapeStartPoint);
+		this.width = width;
+		this.height = height;
+		shape = new int[width][height];	
+		initShape(shapeString);
+	}
+	
 	public Shape(int width, int height, Point position) {
 		this(width, height);
 		this.position = new Point(position);
@@ -24,7 +33,14 @@ public abstract class Shape {
 		shape = new int[width][height];		
 		initShape();
 	}
-
+	
+	private void initShape(String shapeString) {
+		for (int x = 0; x < width; x++) 
+			for (int y = 0; y < height; y++) 
+				if(shapeString.charAt(x + y * width) == '1')
+					this.shape[x][y] = 1;
+	}
+	
 	protected abstract void initShape();
 
 	private void print() {
@@ -78,20 +94,25 @@ public abstract class Shape {
 	public void rotate() {
 		int[][] rotatedShape = new int[height][width];
 		
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++)
+			for (int y = 0; y < height; y++)
 				rotatedShape[y][x] = shape[x][y]; 
-			}
-		}
 		
 		int temp = height;
 		height = width;
 		width = temp;
 		
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width / 2; x++) {
+				temp = rotatedShape[x][y];
+				rotatedShape[x][y] = rotatedShape[width - 1 - x][y];
+				rotatedShape[width - 1 - x][y] = temp;
+			}
+		}
+			
 		print();
 		shape = rotatedShape;
 		System.out.println();
-		
 	}
 	
 }
