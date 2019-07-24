@@ -23,8 +23,8 @@ public class TetrisField {
 				//new BigTShape(), new SquareShape(), new TShape(), new ZShape()));
 				//BigTShape.class, SquareShape.class, ZShape.class, TShape.class));
 				LShape.class));
-				//new BigTShape(), new ZShape()));
-				//TShape.class));
+		//new BigTShape(), new ZShape()));
+		//TShape.class));
 		newShape(new SquareShape());
 	}
 
@@ -48,14 +48,11 @@ public class TetrisField {
 	}
 
 	private void newShape(Shape shape) {
-		
 		try {
 			addShape(shapeList.get((int) (Math.random() * shapeList.size())).newInstance());
 		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
-		//addShape(ZShape.class.newInstance())
-		//addShape(new ZShape());
 	}
 
 	private void removeShape(Shape shape) {
@@ -66,17 +63,20 @@ public class TetrisField {
 	}
 
 	public void moveDown(){
-		System.out.println("Moved Down: x = " + activeShape.position.x + " y = " + activeShape.position.y);
 		if(((activeShape.position.y + activeShape.height) == field[0].length) || isCollisionDown()) {
-			for (int i = 0; i < activeShape.height; i++)
-				if(isLine(i + activeShape.position.y)) 
-					removeLine(i + activeShape.position.y);
+			//If Game Over resets the game
+			if(activeShape.position.y == DI.shapeStartPoint.y)
+				field = new int[DI.tetrisCellCountH][DI.tetrisCellCountV];
+			else
+				for (int i = 0; i < activeShape.height; i++)
+					if(isLine(i + activeShape.position.y)) 
+						removeLine(i + activeShape.position.y);
+			
 			newShape(new SquareShape());
 		}else {
 			removeShape(activeShape);
 			activeShape.position.y += 1;
 			addShape(activeShape);
-			System.out.println("Moved Down: x = " + activeShape.position.x + " y = " + activeShape.position.y);
 		}
 	}
 
@@ -97,33 +97,27 @@ public class TetrisField {
 	}
 
 	public void moveSide(int offset) {
-		System.out.println("Moved Side: x = " + activeShape.position.x + " y = " + activeShape.position.y);
 		if(activeShape.position.x + offset >= 0 && 
 				(activeShape.position.x + offset + activeShape.width) <= field.length &&
 				!isCollisionSide(offset)) {
 			removeShape(activeShape);
 			activeShape.position.x += offset;
 			addShape(activeShape);
-
-			System.out.println("Moved Side: x = " + activeShape.position.x + " y = " + activeShape.position.y);
 		}
 	}
 
 	private boolean isCollisionDown() {
-		int[] bottom = activeShape.bottomLane();
+		int[] bottom = activeShape.bottom;
 
-		for(int i = 0; i < activeShape.width; i++) {
-			if(field[activeShape.position.x + i][activeShape.position.y + bottom[i]] == 1) {
-				System.out.println("Collision");
+		for(int i = 0; i < activeShape.width; i++) 
+			if(field[activeShape.position.x + i][activeShape.position.y + bottom[i]] == 1) 
 				return true;
-			}
-		}
 
 		return false;
 	}
-	
+
 	private boolean isCollisionSide(int offset) {
-		int[] side = offset == 1 ? activeShape.rightLine() : activeShape.leftLine();
+		int[] side = offset == 1 ? activeShape.rightSide : activeShape.leftSide;
 
 		for(int i = 0; i < activeShape.height; i++)
 			if(field[activeShape.position.x + side[i]][activeShape.position.y + i] == 1) 
@@ -131,7 +125,33 @@ public class TetrisField {
 
 		return false;
 	}
-	
+
+	private boolean isCollisionRotateBlock() {
+		// Width and Height swapped assuming rotation
+		int x, y;
+		if(activeShape.width < activeShape.height) {
+			x = activeShape.width;
+			y = 0;
+		} else {
+			x = 0;
+			y = activeShape.height;
+		}
+
+		for (; x < activeShape.height; x++) 
+			for (int y1 = y; y1 < activeShape.width; y1++) {
+				System.out.println("Blyat");
+				if(field[activeShape.position.x + x][activeShape.position.y + y] == 1 && 
+						activeShape.rotatePoint(x, y) == 1) 
+					return true;
+			}
+		return false;
+	}
+
+	private boolean isCollisionRotateSides() {
+		return (activeShape.position.x + activeShape.height > field.length ||
+				(activeShape.position.y + activeShape.width) > field[0].length);
+	}
+
 	private boolean isLine(int y) {
 		for (int i = 0; i < field.length; i++) 
 			if(field[i][y] == 0)
@@ -140,9 +160,11 @@ public class TetrisField {
 	}
 
 	public void rotate() {
-		removeShape(activeShape);
-		activeShape.rotate();
-		addShape(activeShape);
+		if(!(isCollisionRotateSides() || isCollisionRotateBlock())) {
+			removeShape(activeShape);
+			activeShape.rotate();
+			addShape(activeShape);
+		}
 	}
 
 }

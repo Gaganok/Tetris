@@ -69,7 +69,7 @@ public class TetrisCanvas extends Canvas{
 			        	DI.field.rotate();
 			            break;
 			        case KeyEvent.VK_DOWN:
-			            // handle down 
+			        	DI.field.moveDown();
 			            break;
 			        case KeyEvent.VK_LEFT:
 			            DI.field.moveSide(-1);

@@ -12,9 +12,7 @@ public class Tetris {
 	}
 	
 	private static void test() {
-		DI.field.rotate();
-		DI.field.rotate();
-		DI.field.rotate();
-		DI.field.rotate();
+		//DI.field.test();
+		
 	}
 }

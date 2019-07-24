@@ -9,18 +9,22 @@ public abstract class Shape {
 
 	public int width, height;
 	public int[][] shape;
+	public int[] bottom, leftSide, rightSide;
+
 	public Point position;
 
-	
-	
+	private int[][] nextRotate;
+
+
 	public Shape(int width, int height, String shapeString) {
 		this.position = new Point(DI.shapeStartPoint);
 		this.width = width;
 		this.height = height;
 		shape = new int[width][height];	
 		initShape(shapeString);
+		sidesInit();
 	}
-	
+
 	public Shape(int width, int height, Point position) {
 		this(width, height);
 		this.position = new Point(position);
@@ -32,15 +36,16 @@ public abstract class Shape {
 		this.height = height;
 		shape = new int[width][height];		
 		initShape();
+		sidesInit();
 	}
-	
+
 	private void initShape(String shapeString) {
 		for (int x = 0; x < width; x++) 
 			for (int y = 0; y < height; y++) 
 				if(shapeString.charAt(x + y * width) == '1')
 					this.shape[x][y] = 1;
 	}
-	
+
 	protected abstract void initShape();
 
 	private void print() {
@@ -52,8 +57,8 @@ public abstract class Shape {
 		}
 	}
 
-	public int[] bottomLane() {
-		int[] bottom = new int[width]; 
+	private void bottomInit() {
+		bottom = new int[width]; 
 
 		for (int x = 0; x < width; x++)
 			for (int y = height - 1; y >= 0; y--) 
@@ -61,58 +66,69 @@ public abstract class Shape {
 					bottom[x] = y + 1;
 					break;
 				}
-
-		return bottom;
 	}
 
-	public int[] leftLine() {
-		int[] left = new int[height]; 
+	private void leftSideInit() {
+		leftSide = new int[height]; 
 
 		for (int y = 0; y < height; y++) 
 			for (int x = 0; x < width; x++)
 				if(shape[x][y] == 1) {
-					left[y] = x - 1;
+					leftSide[y] = x - 1;
 					break;
 				}
-
-		return left;
 	}
-	
-	public int[] rightLine() {
-		int[] right = new int[height]; 
+
+	private void rightSideInit() {
+		rightSide = new int[height]; 
 
 		for (int y = 0; y < height; y++) 
 			for (int x = width - 1; x >= 0; x--)
 				if(shape[x][y] == 1) {
-					right[y] = x + 1;
+					rightSide[y] = x + 1;
 					break;
 				}
+	}
 
-		return right;
+	private void sidesInit() {
+		bottomInit();
+		leftSideInit();
+		rightSideInit();
 	}
 
 	public void rotate() {
-		int[][] rotatedShape = new int[height][width];
-		
-		for (int x = 0; x < width; x++)
-			for (int y = 0; y < height; y++)
-				rotatedShape[y][x] = shape[x][y]; 
-		
+		rotateInit();
+		shape = nextRotate.clone();
 		int temp = height;
 		height = width;
 		width = temp;
-		
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width / 2; x++) {
-				temp = rotatedShape[x][y];
-				rotatedShape[x][y] = rotatedShape[width - 1 - x][y];
-				rotatedShape[width - 1 - x][y] = temp;
+		sidesInit();
+		nextRotate = null;
+	}
+
+	private void rotateInit() {
+		if(nextRotate == null) {
+			nextRotate = new int[height][width];
+
+			for (int x = 0; x < width; x++)
+				for (int y = 0; y < height; y++)
+					nextRotate[y][x] = shape[x][y]; 
+
+			int temp;
+
+			for (int y = 0; y < width; y++) {
+				for (int x = 0; x < height / 2; x++) {
+					temp = nextRotate[x][y];
+					nextRotate[x][y] = nextRotate[height - 1 - x][y];
+					nextRotate[height - 1 - x][y] = temp;
+				}
 			}
 		}
-			
-		print();
-		shape = rotatedShape;
-		System.out.println();
 	}
-	
+
+	public int rotatePoint(int x1, int y1) {
+		rotateInit();
+		return nextRotate[x1][y1];
+	}
+
 }
